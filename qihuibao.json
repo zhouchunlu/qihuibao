@@ -101,7 +101,7 @@ systemSetting:系统相关信息
 
 
 API
-	登录 Post /1.0/Company    {phone:111,email:123@email.com,password:123} phone 或email二选一
+	登录 Post /1.0/Company    {phone:111,email:"123@email.com",password:123} phone 或email二选一
 	获取企业信息 Get /1.0/Company/{companyId}
 	获取对公账户 Get /1.0/CorporateAccount?where={"$eq":{"companyId":123}}
 	获取单个账户信息 Get /1.0/CorporateAccount/{corporateAccountId}
