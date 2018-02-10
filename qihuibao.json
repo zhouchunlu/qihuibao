@@ -1,0 +1,124 @@
+每个表均包含id(int，自增),createAt,updateAt三个字段
+Company:企业信息
+	companyId(int):企业编号
+	phone(string):企业联系方式
+	email(string):企业邮箱
+	password(string):企业登录密码
+	companyName(string):企业名称
+	companyIcon(string):企业标志
+	companyCode(string):社会企业代码
+	companyLicence(string):营业执照(图片)
+	corporateIndetity(string):法人身份证号
+	agentName(string):代理人姓名
+	agentIdentity(string):代理人身份证号
+	agentIdentityFront(string):代理人身份证正面
+	agentIdentityBack(string):代理人身份证背面
+	status(int):企业状态，0无效 1有效 ，默认为1
+
+Banner:推广图位
+	imgSrc(string):图片地址
+	url(string):图片链接地址
+	status(int):图片状态，0无效 1有效 ，默认为1
+
+Bank:银行信息
+	bankId(int):银行编号
+	bankName(string):银行名称
+	bankIcon(string):银行icon
+
+ProductType:产品类型
+	productTypeId(int):类型编号
+	productTypeName(string):类型名称
+	productTypeHold(string):持仓方式 是否需要单独一个表表示持仓方式？
+
+Product:产品信息
+	productId(int):产品编号
+	productName(string):产品名称
+	bail(float):银行保证金(%)，ex:2.00
+	exchangeRate(float):预期汇率(%)，ex:8.8746
+	spread(float):点差，单位:元 要不要换算成分？
+	lockoutDuration(int):锁定期限，单位:月 要不要换算成天？
+	bankId(int):银行编号
+	productTypeId(int):产品类型编号
+	buyPrice(int):买入价
+	sellPrice(int):卖出价
+	minAmount(int):最低购买金额 单位:元
+	maxAmount(int):最多购买金额 单位:元
+	agreementId(int):合同编号
+	status(int):产品状态 0 可订购 1 不可订购 默认0 是否还有别的状态？
+
+PurchaseRecord:购买记录(交易记录)
+	pruchaseId(int):购买单号
+	productId:产品编号
+	amount(int):购买金额(合约金额) 单位:元
+	payBailAmount(int):支付保证金金额 单位:元
+	corporateAccountId:支付方式编号
+	status(int):状态 0 待支付 1  支付成功 2 支付失败 3 平仓成功 4 平仓失败 是否还有别的状态？
+	remark(string):备注
+
+CorporateAccount:对公账户(支付方式)
+	corporateAccountId(int):支付方式编号
+	companyId(int): 企业编号
+	cardNumber(string):卡号
+	cardIcon(string):卡片icon
+	bankId:银行编号
+	singleLimit(int):单笔限额 单位:元
+	singleDaylimit(int):单日限额 单位:元
+	status(int):状态 0 无效 1 有效，默认为1
+
+Agreement:合同信息
+	agreementId(int):合同编号
+	buyRules(string):买入规则
+	riskInform(string):风险告知
+
+
+News:时讯
+	newsId(int):时讯编号
+	bankId:银行编号
+	newsDateTime(datetime):时讯时间
+	newsUrl(string):时讯url
+	newContent(string):时讯内容
+	status(int):状态 0 无效 1 有效，默认为1
+
+Message:消息
+	messageId(int):消息编号
+	messageTitle(string):消息标题
+	messageContent(string):消息内容
+	messageType(string):消息类型 是否需要或者创建单独表？
+	status(int):状态 0 无效 1 有效，默认为1
+
+CompanyMessage:公司消息记录
+	conpanyId
+	messageId
+	status(int):状态 0 已读 1 未读，默认为1
+
+ConpanyNews
+	conpanyId
+	newsId
+	status(int):状态 0 已读 1 未读，默认为1
+
+systemSetting:系统相关信息
+	serviceNumber(string):客服电话
+
+
+API
+	登录 Post /1.0/Company    {phone:111,email:123@email.com,password:123} phone 或email二选一
+	获取企业信息 Get /1.0/Company/{companyId}
+	获取对公账户 Get /1.0/CorporateAccount?where={"$eq":{"companyId":123}}
+	获取单个账户信息 Get /1.0/CorporateAccount/{corporateAccountId}
+	获取我的交易记录Get /1.0/PurchaseRecord?where={"$eq":{"companyId:1}}&sort={"updateAt":1}&skip=10&limit=10
+	获取单个交易记录 Get /1.0/PurchaseRecord/{purchaseRecordId}
+	获取产品信息Get /1.0/Product?where={"$eq":{"bankId":1,"productTypeId":2}&sort={"updateAt":1}&keys={"companyId":1,"amount":1,...}&skip=10&limit=10
+	
+
+	添加信息，均采用post请求
+		url：/1.0/{tableName}  tableName为对应的表名
+		body： json串 {"key":"value"} key为表中的字段名称，value为对应的值
+
+	更新信息，均采用put请求
+		url /1.0/{tableName}/id tableName为对应的表名，id为要更新的数据对应的id
+		body： json串 {"key":"value"} key为需要更新的字段名称，value为对应的值
+
+	删除信息，均采用delete请求
+		url /1.0/{tableName}/id tableName为对应的表名，id为要更新的数据对应的id
+
+
